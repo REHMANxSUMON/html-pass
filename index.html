@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>VORTEX SQUAD - WinGo 30S</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #060d08;
+            --card-bg: #142d1b;
+            --primary-green: #00e676;
+            --kathali-color: #e67e22;
+            --text-color: #ffffff;
+            --error-color: #ff3d00;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body, html { width: 100%; height: 100%; background-color: var(--bg-color); color: var(--text-color); overflow: hidden; }
+
+        /* লগইন গেট */
+        #loginGate {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #163821 0%, #060d08 100%);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; padding: 20px;
+        }
+        .login-box {
+            width: 100%; max-width: 360px;
+            background: var(--card-bg);
+            border: 2px solid var(--primary-green);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 230, 118, 0.3);
+        }
+        .login-box h2 { color: var(--primary-green); font-size: 24px; font-weight: 900; margin-bottom: 5px; text-shadow: 0 0 10px rgba(0, 230, 118, 0.4); }
+        .credit-text { font-size: 10px; color: var(--kathali-color); font-weight: bold; letter-spacing: 2px; margin-bottom: 20px; }
+        .input-group { text-align: left; margin-bottom: 15px; }
+        .input-group label { font-size: 11px; color: var(--primary-green); display: block; margin-bottom: 5px; }
+        input {
+            width: 100%; padding: 12px;
+            background: #0d2214; border: 1px solid #1e462a;
+            border-radius: 8px; color: #fff; font-size: 14px; outline: none;
+        }
+        input:focus { border-color: var(--kathali-color); }
+        .error-msg { color: var(--error-color); font-size: 11px; margin-top: 5px; display: none; font-weight: 600; }
+        .btn-kathali {
+            width: 100%; background: linear-gradient(135deg, var(--kathali-color), #d35400);
+            color: white; border: none; padding: 12px; border-radius: 8px;
+            font-weight: bold; font-size: 15px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(230, 126, 34, 0.4);
+            margin-top: 5px;
+        }
+        .signup-link { margin-top: 15px; font-size: 12px; }
+        .signup-link span { color: var(--primary-green); cursor: pointer; text-decoration: underline; }
+
+        /* গেম ইফ্রেম */
+        #gameIframe { width: 100%; height: 100%; border: none; display: none; background: #fff; }
+
+        /* ড্র্যাগেবল বক্স */
+        #draggableBox {
+            position: absolute; top: 20px; right: 20px; width: 200px;
+            background: rgba(11, 26, 16, 0.96); border: 2px solid var(--primary-green);
+            border-radius: 14px; box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            z-index: 999; display: none; cursor: move; user-select: none; padding: 10px;
+            text-align: center;
+        }
+        .box-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 230, 118, 0.2); padding-bottom: 4px; margin-bottom: 8px; }
+        .live-indicator { display: flex; align-items: center; font-size: 10px; font-weight: bold; color: #aaa; }
+        .rgb-lamp { width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; animation: rgbBlink 1.5s infinite alternate; }
+        @keyframes rgbBlink { 0% { background-color: #ff3d00; } 50% { background-color: #00e676; } 100% { background-color: #29b6f6; } }
+        .drag-handle { font-size: 9px; color: var(--kathali-color); font-weight: bold; }
+        .widget-brand { font-size: 13px; font-weight: 900; color: var(--primary-green); margin-bottom: 5px; }
+        .widget-info { font-size: 11px; margin-bottom: 4px; color: #ddd; text-align: left; }
+        .widget-info span { float: right; font-weight: bold; color: var(--primary-green); }
+        .widget-result { background: #07140b; border-radius: 6px; padding: 6px; text-align: center; margin: 6px 0; border: 1px dashed var(--kathali-color); }
+        #result-display { font-size: 18px; font-weight: 900; }
+        #num-display { font-size: 10px; color: #888; font-weight: bold; margin-top: 2px; }
+        .widget-btn { width: 100%; background: #111; color: var(--primary-green); border: 1px solid var(--primary-green); padding: 5px; font-size: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; margin-bottom: 8px; }
+        .footer-buttons { display: flex; gap: 6px; margin-top: 8px; border-top: 1px solid rgba(0, 230, 118, 0.1); padding-top: 8px; }
+        .btn-glow { flex: 1; padding: 6px 4px; font-size: 9px; font-weight: 800; text-decoration: none; color: #fff; border-radius: 4px; text-align: center; }
+        .tg-lamp { background: #0088cc; animation: lampCyan 1.2s infinite alternate; }
+        .sup-lamp { background: #d81b60; animation: lampPink 1.2s infinite alternate; }
+        @keyframes lampCyan { 0% { box-shadow: 0 0 2px #0088cc; } 100% { box-shadow: 0 0 12px #00e5ff; } }
+        @keyframes lampPink { 0% { box-shadow: 0 0 2px #d81b60; } 100% { box-shadow: 0 0 12px #ff4081; } }
+        .widget-credit { font-size: 8px; color: #666; margin-top: 6px; }
+        .scanning { color: #ffcc00; text-shadow: 0 0 5px #ffcc00; }
+        .big-glow { color: var(--primary-green); text-shadow: 0 0 10px var(--primary-green); }
+        .small-glow { color: #ff3d00; text-shadow: 0 0 10px #ff3d00; }
+    </style>
+</head>
+<body>
+
+<!-- লগইন গেটওয়ে -->
+<div id="loginGate">
+    <div class="login-box">
+        <h2>VORTEX SQUAD</h2>
+        <div class="credit-text">POWERED BY FIREBASE</div>
+        <div class="input-group">
+            <label>ইমেইল ঠিকানা</label>
+            <input type="email" id="loginEmail" placeholder="you@example.com">
+        </div>
+        <div class="input-group">
+            <label>পাসওয়ার্ড</label>
+            <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড">
+            <div class="error-msg" id="loginError">ভুল ইমেইল বা পাসওয়ার্ড</div>
+        </div>
+        <button class="btn-kathali" onclick="login()">🔓 লগইন করুন</button>
+        <div class="signup-link">
+            নতুন? <span onclick="showSignup()">অ্যাকাউন্ট তৈরি করুন</span>
+        </div>
+    </div>
+</div>
+
+<!-- সাইন আপ মডাল (ছোট popup) -->
+<div id="signupModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; justify-content:center; align-items:center;">
+    <div class="login-box" style="width:90%; max-width:320px;">
+        <h2>সাইন আপ</h2>
+        <div class="input-group">
+            <label>ইমেইল</label>
+            <input type="email" id="signupEmail" placeholder="your@email.com">
+        </div>
+        <div class="input-group">
+            <label>পাসওয়ার্ড (৬+ অক্ষর)</label>
+            <input type="password" id="signupPassword" placeholder="পাসওয়ার্ড">
+        </div>
+        <button class="btn-kathali" onclick="signup()">✅ সাইন আপ</button>
+        <div class="signup-link"><span onclick="closeSignup()">বাতিল</span></div>
+        <div id="signupMsg" style="color:#ffaa00; font-size:12px; margin-top:10px;"></div>
+    </div>
+</div>
+
+<!-- গেম ইফ্রেম -->
+<iframe id="gameIframe" src="https://hgnice.biz/#/register?invitationCode=554811939169"></iframe>
+
+<!-- ড্র্যাগেবল বক্স -->
+<div id="draggableBox">
+    <div class="box-header">
+        <div class="live-indicator"><div class="rgb-lamp"></div> LIVE</div>
+        <div class="drag-handle">::: MOVE</div>
+    </div>
+    <div class="widget-brand">VORTEX SQUAD</div>
+    <div class="widget-info">PEROID: <span id="period-display">FETCHING...</span></div>
+    <div class="widget-info">Time: <span id="sec-display">30s</span></div>
+    <div class="widget-result">
+        <div id="result-display" class="scanning">WAIT</div>
+        <div id="num-display">NUMBER: --</div>
+    </div>
+    <button class="widget-btn" id="actionBtn" onclick="activateEngine()">START ENGINE</button>
+    <div class="footer-buttons">
+        <a href="https://t.me/BD_WIN24_SINGNAL" target="_blank" class="btn-glow tg-lamp">JOIN TELEGRAM</a>
+        <a href="https://t.me/REHMANxSUMON" target="_blank" class="btn-glow sup-lamp">SUPPORT</a>
+    </div>
+    <div class="widget-credit">CREDIT: VORTEX</div>
+</div>
+
+<script type="module">
+    // Firebase imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    // তোমার Firebase কনফিগারেশন (তোমার দেওয়া তথ্য)
+    const firebaseConfig = {
+        apiKey: "AIzaSyCmCpogT3RIH8fJut06mYDa0RTo2CIACbc",
+        authDomain: "my-new-9dce6.firebaseapp.com",
+        projectId: "my-new-9dce6",
+        storageBucket: "my-new-9dce6.firebasestorage.app",
+        messagingSenderId: "1035629984726",
+        appId: "1:1035629984726:web:cde56289627b20dafa0277",
+        measurementId: "G-1F8GNWZLJD"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // DOM elements
+    const loginGate = document.getElementById('loginGate');
+    const gameFrame = document.getElementById('gameIframe');
+    const draggableBox = document.getElementById('draggableBox');
+
+    // লগইন ফাংশন
+    window.login = async () => {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const errorDiv = document.getElementById('loginError');
+        if (!email || !password) {
+            errorDiv.innerText = 'ইমেইল ও পাসওয়ার্ড দিন';
+            errorDiv.style.display = 'block';
+            return;
+        }
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            // লগইন সফল
+            loginGate.style.display = 'none';
+            gameFrame.style.display = 'block';
+            draggableBox.style.display = 'block';
+            makeElementDraggable(draggableBox);
+            errorDiv.style.display = 'none';
+            // সিস্টেম অ্যাক্টিভেশন আগের মতো থাকবে
+        } catch (err) {
+            errorDiv.innerText = err.message.includes('user-not-found') ? 'ইমেইল নেই' : (err.message.includes('wrong-password') ? 'ভুল পাসওয়ার্ড' : err.message);
+            errorDiv.style.display = 'block';
+        }
+    };
+
+    // সাইন আপ মডাল শো
+    window.showSignup = () => {
+        document.getElementById('signupModal').style.display = 'flex';
+    };
+    window.closeSignup = () => {
+        document.getElementById('signupModal').style.display = 'none';
+        document.getElementById('signupMsg').innerText = '';
+    };
+    window.signup = async () => {
+        const email = document.getElementById('signupEmail').value.trim();
+        const pass = document.getElementById('signupPassword').value;
+        const msgDiv = document.getElementById('signupMsg');
+        if (!email || !pass) {
+            msgDiv.innerText = 'ইমেইল ও পাসওয়ার্ড দিন';
+            return;
+        }
+        if (pass.length < 6) {
+            msgDiv.innerText = 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষর';
+            return;
+        }
+        try {
+            await createUserWithEmailAndPassword(auth, email, pass);
+            msgDiv.style.color = '#00e676';
+            msgDiv.innerText = '✅ অ্যাকাউন্ট তৈরি! এখন লগইন করুন।';
+            setTimeout(() => {
+                closeSignup();
+                document.getElementById('loginEmail').value = email;
+                document.getElementById('loginPassword').value = '';
+            }, 1500);
+        } catch (err) {
+            msgDiv.style.color = '#ff3d00';
+            if (err.code === 'auth/email-already-in-use') msgDiv.innerText = 'এই ইমেইল আগেই আছে';
+            else msgDiv.innerText = err.message;
+        }
+    };
+
+    // ---------- বাকি সব ফাংশন (ভয়েস, টাইমার, ড্র্যাগ) আগের মতো ----------
+    let lastLockedPeriod = "", lockedResult = "", lockedNum = "";
+    let systemActive = false;
+    let voiceAlertDone = false;
+
+    function speakCommand(text) {
+        if (systemActive && 'speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            let speech = new SpeechSynthesisUtterance(text);
+            speech.lang = 'bn-BD';
+            speech.pitch = 1.0;
+            speech.rate = 1.1;
+            window.speechSynthesis.speak(speech);
+        }
+    }
+
+    window.activateEngine = function() {
+        systemActive = true;
+        const btn = document.getElementById('actionBtn');
+        btn.innerText = "RUNNING ✔";
+        btn.style.borderColor = "#e67e22";
+        btn.style.color = "#e67e22";
+        btn.disabled = true;
+        speakCommand("সিস্টেম চালু হয়েছে");
+        startLiveApiEngine();
+    };
+
+    function startLiveApiEngine() {
+        setInterval(async () => {
+            try {
+                const now = new Date();
+                const seconds = now.getSeconds();
+                const remaining = 30 - (seconds % 30);
+                const year = now.getUTCFullYear();
+                const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+                const day = String(now.getUTCDate()).padStart(2, '0');
+                const currentUtcSeconds = (now.getUTCHours() * 3600) + (now.getUTCMinutes() * 60) + now.getUTCSeconds();
+                const interval = Math.floor(currentUtcSeconds / 30) + 1;
+                const periodID = `${year}${month}${day}30S${String(interval).padStart(4, '0')}`;
+                document.getElementById('period-display').innerText = periodID;
+                document.getElementById('sec-display').innerText = remaining + "s";
+                const resEl = document.getElementById('result-display');
+                const numEl = document.getElementById('num-display');
+                if (remaining > 25) {
+                    resEl.innerText = "WAIT";
+                    resEl.className = "scanning";
+                    numEl.innerText = "NUMBER: --";
+                    lastLockedPeriod = "";
+                    voiceAlertDone = false;
+                } else {
+                    if (lastLockedPeriod !== periodID) {
+                        lastLockedPeriod = periodID;
+                        lockedResult = Math.random() > 0.5 ? "BIG" : "SMALL";
+                        lockedNum = lockedResult === "BIG" ? [5,6,7,8,9][Math.floor(Math.random()*5)] : [0,1,2,3,4][Math.floor(Math.random()*5)];
+                    }
+                    resEl.innerText = lockedResult;
+                    resEl.className = lockedResult === "BIG" ? "big-glow" : "small-glow";
+                    numEl.innerText = "NUMBER: " + lockedNum;
+                    if (!voiceAlertDone) {
+                        if (lockedResult === "BIG") speakCommand("বিগ এ ট্রেড নেও");
+                        else speakCommand("স্মল এ ট্রেড নেও");
+                        voiceAlertDone = true;
+                    }
+                }
+            } catch(e) { console.log(e); }
+        }, 1000);
+    }
+
+    function makeElementDraggable(elmnt) {
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        elmnt.onmousedown = dragMouseDown;
+        elmnt.ontouchstart = dragMouseDown;
+        function dragMouseDown(e) {
+            e = e || window.event;
+            if(e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.tagName === 'A') return;
+            if(e.type === 'touchstart') {
+                pos3 = e.touches[0].clientX;
+                pos4 = e.touches[0].clientY;
+                document.ontouchend = closeDragElement;
+                document.ontouchmove = elementDrag;
+            } else {
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+            }
+        }
+        function elementDrag(e) {
+            e = e || window.event;
+            let clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+            let clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+            pos1 = pos3 - clientX;
+            pos2 = pos4 - clientY;
+            pos3 = clientX;
+            pos4 = clientY;
+            let topPos = elmnt.offsetTop - pos2;
+            let leftPos = elmnt.offsetLeft - pos1;
+            if(topPos < 0) topPos = 0;
+            if(leftPos < 0) leftPos = 0;
+            if(topPos > window.innerHeight - elmnt.clientHeight) topPos = window.innerHeight - elmnt.clientHeight;
+            if(leftPos > window.innerWidth - elmnt.clientWidth) leftPos = window.innerWidth - elmnt.clientWidth;
+            elmnt.style.top = topPos + "px";
+            elmnt.style.left = leftPos + "px";
+            elmnt.style.right = "auto";
+        }
+        function closeDragElement() {
+            document.onmouseup = null;
+            document.onmousemove = null;
+            document.ontouchend = null;
+            document.ontouchmove = null;
+        }
+    }
+</script>
+</body>
+</html>
