@@ -6,6 +6,7 @@
     <title>VORTEX SQUAD - WinGo 30S</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
+        /* তোমার আগের সব স্টাইল ঠিক রাখো – আমি কমিয়ে সংক্ষেপে দিচ্ছি */
         :root {
             --bg-color: #060d08;
             --card-bg: #142d1b;
@@ -17,7 +18,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         body, html { width: 100%; height: 100%; background-color: var(--bg-color); color: var(--text-color); overflow: hidden; }
 
-        /* লগইন গেট */
         #loginGate {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle, #163821 0%, #060d08 100%);
@@ -33,7 +33,7 @@
             text-align: center;
             box-shadow: 0 0 30px rgba(0, 230, 118, 0.3);
         }
-        .login-box h2 { color: var(--primary-green); font-size: 24px; font-weight: 900; margin-bottom: 5px; text-shadow: 0 0 10px rgba(0, 230, 118, 0.4); }
+        .login-box h2 { color: var(--primary-green); font-size: 24px; font-weight: 900; margin-bottom: 5px; }
         .credit-text { font-size: 10px; color: var(--kathali-color); font-weight: bold; letter-spacing: 2px; margin-bottom: 20px; }
         .input-group { text-align: left; margin-bottom: 15px; }
         .input-group label { font-size: 11px; color: var(--primary-green); display: block; margin-bottom: 5px; }
@@ -51,13 +51,7 @@
             box-shadow: 0 4px 15px rgba(230, 126, 34, 0.4);
             margin-top: 5px;
         }
-        .signup-link { margin-top: 15px; font-size: 12px; }
-        .signup-link span { color: var(--primary-green); cursor: pointer; text-decoration: underline; }
-
-        /* গেম ইফ্রেম */
         #gameIframe { width: 100%; height: 100%; border: none; display: none; background: #fff; }
-
-        /* ড্র্যাগেবল বক্স */
         #draggableBox {
             position: absolute; top: 20px; right: 20px; width: 200px;
             background: rgba(11, 26, 16, 0.96); border: 2px solid var(--primary-green);
@@ -65,6 +59,7 @@
             z-index: 999; display: none; cursor: move; user-select: none; padding: 10px;
             text-align: center;
         }
+        /* বাকি সব স্টাইল তোমার আগের মতোই থাকবে – আমি সংক্ষেপে দিচ্ছি */
         .box-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0, 230, 118, 0.2); padding-bottom: 4px; margin-bottom: 8px; }
         .live-indicator { display: flex; align-items: center; font-size: 10px; font-weight: bold; color: #aaa; }
         .rgb-lamp { width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; animation: rgbBlink 1.5s infinite alternate; }
@@ -91,49 +86,26 @@
 </head>
 <body>
 
-<!-- লগইন গেটওয়ে -->
 <div id="loginGate">
     <div class="login-box">
         <h2>VORTEX SQUAD</h2>
-        <div class="credit-text">POWERED BY FIREBASE</div>
+        <div class="credit-text">AUTHORIZED ACCESS ONLY</div>
         <div class="input-group">
-            <label>ইমেইল ঠিকানা</label>
-            <input type="email" id="loginEmail" placeholder="you@example.com">
+            <label>ইমেইল</label>
+            <input type="email" id="loginEmail" placeholder="আপনার ইমেইল">
         </div>
         <div class="input-group">
             <label>পাসওয়ার্ড</label>
             <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড">
             <div class="error-msg" id="loginError">ভুল ইমেইল বা পাসওয়ার্ড</div>
         </div>
-        <button class="btn-kathali" onclick="login()">🔓 লগইন করুন</button>
-        <div class="signup-link">
-            নতুন? <span onclick="showSignup()">অ্যাকাউন্ট তৈরি করুন</span>
-        </div>
+        <button class="btn-kathali" onclick="login()">🔐 লগইন করুন</button>
+        <!-- সাইন আপ লিংক সরিয়ে দেওয়া হয়েছে -->
     </div>
 </div>
 
-<!-- সাইন আপ মডাল (ছোট popup) -->
-<div id="signupModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; justify-content:center; align-items:center;">
-    <div class="login-box" style="width:90%; max-width:320px;">
-        <h2>সাইন আপ</h2>
-        <div class="input-group">
-            <label>ইমেইল</label>
-            <input type="email" id="signupEmail" placeholder="your@email.com">
-        </div>
-        <div class="input-group">
-            <label>পাসওয়ার্ড (৬+ অক্ষর)</label>
-            <input type="password" id="signupPassword" placeholder="পাসওয়ার্ড">
-        </div>
-        <button class="btn-kathali" onclick="signup()">✅ সাইন আপ</button>
-        <div class="signup-link"><span onclick="closeSignup()">বাতিল</span></div>
-        <div id="signupMsg" style="color:#ffaa00; font-size:12px; margin-top:10px;"></div>
-    </div>
-</div>
-
-<!-- গেম ইফ্রেম -->
 <iframe id="gameIframe" src="https://hgnice.biz/#/register?invitationCode=554811939169"></iframe>
 
-<!-- ড্র্যাগেবল বক্স -->
 <div id="draggableBox">
     <div class="box-header">
         <div class="live-indicator"><div class="rgb-lamp"></div> LIVE</div>
@@ -155,11 +127,9 @@
 </div>
 
 <script type="module">
-    // Firebase imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    // তোমার Firebase কনফিগারেশন (তোমার দেওয়া তথ্য)
     const firebaseConfig = {
         apiKey: "AIzaSyCmCpogT3RIH8fJut06mYDa0RTo2CIACbc",
         authDomain: "my-new-9dce6.firebaseapp.com",
@@ -173,12 +143,10 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // DOM elements
     const loginGate = document.getElementById('loginGate');
     const gameFrame = document.getElementById('gameIframe');
     const draggableBox = document.getElementById('draggableBox');
 
-    // লগইন ফাংশন
     window.login = async () => {
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
@@ -190,56 +158,18 @@
         }
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            // লগইন সফল
             loginGate.style.display = 'none';
             gameFrame.style.display = 'block';
             draggableBox.style.display = 'block';
             makeElementDraggable(draggableBox);
             errorDiv.style.display = 'none';
-            // সিস্টেম অ্যাক্টিভেশন আগের মতো থাকবে
         } catch (err) {
-            errorDiv.innerText = err.message.includes('user-not-found') ? 'ইমেইল নেই' : (err.message.includes('wrong-password') ? 'ভুল পাসওয়ার্ড' : err.message);
+            errorDiv.innerText = 'অনুমোদিত ইউজার নন অথবা ভুল তথ্য';
             errorDiv.style.display = 'block';
         }
     };
 
-    // সাইন আপ মডাল শো
-    window.showSignup = () => {
-        document.getElementById('signupModal').style.display = 'flex';
-    };
-    window.closeSignup = () => {
-        document.getElementById('signupModal').style.display = 'none';
-        document.getElementById('signupMsg').innerText = '';
-    };
-    window.signup = async () => {
-        const email = document.getElementById('signupEmail').value.trim();
-        const pass = document.getElementById('signupPassword').value;
-        const msgDiv = document.getElementById('signupMsg');
-        if (!email || !pass) {
-            msgDiv.innerText = 'ইমেইল ও পাসওয়ার্ড দিন';
-            return;
-        }
-        if (pass.length < 6) {
-            msgDiv.innerText = 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষর';
-            return;
-        }
-        try {
-            await createUserWithEmailAndPassword(auth, email, pass);
-            msgDiv.style.color = '#00e676';
-            msgDiv.innerText = '✅ অ্যাকাউন্ট তৈরি! এখন লগইন করুন।';
-            setTimeout(() => {
-                closeSignup();
-                document.getElementById('loginEmail').value = email;
-                document.getElementById('loginPassword').value = '';
-            }, 1500);
-        } catch (err) {
-            msgDiv.style.color = '#ff3d00';
-            if (err.code === 'auth/email-already-in-use') msgDiv.innerText = 'এই ইমেইল আগেই আছে';
-            else msgDiv.innerText = err.message;
-        }
-    };
-
-    // ---------- বাকি সব ফাংশন (ভয়েস, টাইমার, ড্র্যাগ) আগের মতো ----------
+    // বাকি ফাংশন (স্পিচ, টাইমার, ড্র্যাগ) আগের মতোই থাকবে
     let lastLockedPeriod = "", lockedResult = "", lockedNum = "";
     let systemActive = false;
     let voiceAlertDone = false;
